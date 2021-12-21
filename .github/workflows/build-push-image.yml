@@ -1,0 +1,44 @@
+name: Build and Push Image
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron:  '30 18 * * *'
+
+jobs:
+  build:
+    name: Build and push image
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set JKUBE_MASTER_SHA
+      id: step_one
+      run: |
+        echo JKUBE_MASTER_SHA=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/eclipse/jkube/git/ref/heads/master | jq -r '.object.sha') >> $GITHUB_ENV
+
+    - name: Build Image
+      id: build-image
+      uses: redhat-actions/buildah-build@v2
+      with:
+        image: jkube-dev
+        tags: latest ${{ env.JKUBE_MASTER_SHA }}
+        dockerfiles: ./Dockerfile
+        build-args: JKUBE_MASTER_SHA=${{ env.JKUBE_MASTER_SHA }}
+
+    # Podman Login action (https://github.com/redhat-actions/podman-login) also be used to log in,
+    # in which case 'username' and 'password' can be omitted.
+    - name: Push To quay.io
+      id: push-to-quay
+      uses: redhat-actions/push-to-registry@v2
+      with:
+        image: ${{ steps.build-image.outputs.image }}
+        tags: ${{ steps.build-image.outputs.tags }}
+        registry: quay.io/sunix
+        username: sunix
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+
+    - name: Print image url
+      run: echo "Image pushed to ${{ steps.push-to-quay.outputs.registry-paths }}"

@@ -1,4 +1,4 @@
-FROM maven:3.8-eclipse-temurin-11
+FROM maven:3.8-eclipse-temurin-17
 ARG JKUBE_MASTER_SHA=master
 RUN echo reset to ${JKUBE_MASTER_SHA}
 RUN apt-get -y update && \

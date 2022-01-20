@@ -7,13 +7,6 @@ RUN apt-get -y update && \
                        git git-svn git-email colordiff jq tig bash vim less openssh-client hub ack bash-completion wget unzip && \
     rm -rf /var/lib/apt/lists/*
 
-RUN mkdir /jkube
-WORKDIR /jkube
-RUN git clone https://github.com/eclipse/jkube . && \
-    git reset --hard ${JKUBE_MASTER_SHA} && \
-    (mvn install -Dmaven.test.skip -DskipTests || mvn install -Dmaven.test.skip -DskipTests) && \
-    rm -rf /jkube;
-
 
 ENV HOME=/home/user
 WORKDIR ${HOME}

@@ -2,7 +2,12 @@
 source ~/git-completion.bash
 source ~/git-prompt.sh
 
-export PS1='🟢\[\e[0;39m\]$CHE_MACHINE_NAME\[\e[0;39m\]:\[\e[38;5;215m\]\w\[\e[0;39m\]\[\e[1;32m\]$(__git_ps1 " (%s)")\n\[\e[38;5;215m\]>_ \[\e[0m\]'
+# compat devworkspaces
+export CHE_MACHINE_NAME=${CHE_MACHINE_NAME:-$DEVWORKSPACE_COMPONENT_NAME}
+export CHE_WORKSPACE_NAMESPACE=${CHE_WORKSPACE_NAMESPACE:-$DEVWORKSPACE_NAMESPACE}
+export CHE_WORKSPACE_NAME=${CHE_WORKSPACE_NAME:-$DEVWORKSPACE_NAME}
+
+export PS1='🟢 \[\e[0;39m\]$CHE_MACHINE_NAME\[\e[0;39m\]:\[\e[38;5;215m\]\w\[\e[0;39m\]\[\e[1;32m\]$(__git_ps1 " (%s)")\n\[\e[38;5;215m\]>_ \[\e[0m\]'
 
 echo "              [38;5;m##,             "
 echo "         [38;5;m,##[38;5;215m######[38;5;m###         "

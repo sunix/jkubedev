@@ -14,6 +14,10 @@ RUN git clone https://github.com/eclipse/jkube . && \
     (mvn install -Dmaven.test.skip -DskipTests || mvn install -Dmaven.test.skip -DskipTests) && \
     rm -rf /jkube;
 
+WORKDIR /tmp
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+    install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
+    rm kubectl;
 
 ENV HOME=/home/user
 WORKDIR ${HOME}

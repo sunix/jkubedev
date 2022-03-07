@@ -15,9 +15,11 @@ RUN git clone https://github.com/eclipse/jkube . && \
     rm -rf /jkube;
 
 WORKDIR /tmp
-RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+RUN curl https://mirror.openshift.com/pub/openshift-v4/clients/oc/latest/linux/oc.tar.gz -s | tar zxv && \
     install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl && \
-    rm kubectl;
+    install -o root -g root -m 0755 oc /usr/local/bin/oc && \
+    rm kubectl && rm oc && rm README.md;
+    
 
 ENV HOME=/home/user
 WORKDIR ${HOME}
